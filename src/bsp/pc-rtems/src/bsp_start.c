@@ -92,6 +92,7 @@ void OS_BSP_Setup(void)
     }
 
     printf("\n");
+    printf("#### Test Test Test ####\n\n");
     printf("*** End RTEMS info ***\n\n");
 
     /*
