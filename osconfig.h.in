@@ -282,5 +282,48 @@
 #define OS_FS_PHYS_NAME_LEN 64 /**< Physical drive name length */
 #define OS_FS_VOL_NAME_LEN  32 /**< Volume name length */
 
+/**
+ * \brief The alignment for stack memory
+ *
+ * If OS_TaskCreate() is invoked with a valid stack_pointer,
+ * the address it is pointing to must be aligned to the
+ * value of OS_TASK_STACK_ALIGNMENT.  The value depends on the
+ * architecture of the hardware.
+ *
+ * If RTEMS is the operating system, this value must equal
+ * RTEMS_TASK_STORAGE_ALIGNMENT.
+ */
+#define OS_TASK_STACK_ALIGNMENT         @OSAL_CONFIG_TASK_STACK_ALIGNMENT@
+
+/**
+ * \brief The maximum size of task local storage
+ *
+ * Only when the operating system is RTEMS, this define is used.
+ * Task local storage (TLS) is memory local to a task.  TLS stores
+ * variables which exist once for each task as for example errno.
+ *
+ * In RTEMS the task stack, TLS and the floating point context - if
+ * floating point support is enabled - share the same memory area.
+ * Therefore, when providing static or pre-allocated stack memory
+ * to OS_TaskCreate() (or functions which indirectly invoke
+ * OS_TaskCreate()), the memory must be large enough to hold the
+ * stack and TLS plus the floating point context.  The later is only
+ * needed if flag OS_FP_ENABLED is provided to OS_TaskCreate() or
+ * set with OS_ADD_TASK_FLAGS.  This means, the actual size available
+ * for a stack is the value of the stack_size argument minus
+ * OS_MAX_TLS_SIZE and, if enabled, minus CONTEXT_FP_SIZE.
+ *
+ * Note that the actual TLS size of an RTEMS executable is defined by
+ * the linker and the CONFIGURE_MAXIMUM_THREAD_LOCAL_STORAGE_SIZE
+ * configuration option of RTEMS.  OS_MAX_TLS_SIZE must be larger
+ * or equal to the maximum of these two values.  The actual TLS size
+ * of an RTEMS executable can queried with an RTEMS tool as in this
+ * example:
+ *
+ *     rtems-exeinfo -T core-cpu1.exe
+ *
+ * The value must be an integral multiple of OS_TASK_STACK_ALIGNMENT.
+ */
+#define OS_MAX_TLS_SIZE                 @OSAL_CONFIG_MAX_TLS_SIZE@
 
 #endif      /* OSCONFIG_H */

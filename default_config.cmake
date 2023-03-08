@@ -358,3 +358,18 @@ set(OSAL_CONFIG_QUEUE_MAX_DEPTH         50
 set(OSAL_CONFIG_ADD_TASK_FLAGS              0
     CACHE STRING "Flags added to all tasks"
 )
+
+# The minimum alignment for stack memory when provided to OS_TaskCreate()
+#
+# The value depends on the architecture of the hardware.
+set(OSAL_CONFIG_TASK_STACK_ALIGNMENT    4
+    CACHE STRING "Alignment for stack memory"
+)
+
+# The maximum size of task local storage when OS is RTEMS
+#
+# The value shall be an integral multiple of
+# OSAL_CONFIG_TASK_STACK_ALIGNMENT.
+set(OSAL_CONFIG_MAX_TLS_SIZE            0
+    CACHE STRING "Maximum size of task local storage"
+)

@@ -94,6 +94,7 @@ int32 OS_TaskCreate_Impl(const OS_object_token_t *token, uint32 flags)
     rtems_attribute                 r_attributes;
     OS_impl_task_internal_record_t *impl;
     OS_task_internal_record_t *     task;
+    osal_stackptr_t                 r_stack_pointer = NULL;
 
     impl = OS_OBJECT_TABLE_GET(OS_impl_task_table, *token);
     task = OS_OBJECT_TABLE_GET(OS_task_table, *token);
@@ -116,7 +117,30 @@ int32 OS_TaskCreate_Impl(const OS_object_token_t *token, uint32 flags)
         r_attributes |= RTEMS_FLOATING_POINT;
     }
 
-    status = rtems_task_create(r_name, task->priority, task->stack_size, r_mode, r_attributes, &impl->id);
+#if __RTEMS_MAJOR__ >= 6
+    r_stack_pointer = task->stack_pointer;
+
+    if (r_stack_pointer != NULL)
+    {
+        rtems_task_config task_config = {
+            .name = r_name,
+            .initial_priority = task->priority,
+            .storage_area = r_stack_pointer,
+            .storage_size = task->stack_size,
+            .maximum_thread_local_storage_size = OS_MAX_TLS_SIZE,
+            .storage_free = NULL,
+            .initial_modes = r_mode,
+            .attributes = r_attributes
+        };
+
+        status = rtems_task_construct(&task_config, &impl->id);
+    }
+#endif
+
+    if (r_stack_pointer == NULL)
+    {
+        status = rtems_task_create(r_name, task->priority, task->stack_size, r_mode, r_attributes, &impl->id);
+    }
 
     /* check if task_create failed */
     if (status != RTEMS_SUCCESSFUL)

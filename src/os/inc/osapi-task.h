@@ -89,6 +89,18 @@ typedef osal_task((*osal_task_entry)(void)); /**< @brief For task entry point */
  * In that case, a stack of the requested size will be dynamically allocated from
  * the system heap.
  *
+ * If the operating system is RTEMS and stack_pointer is not NULL, the
+ * following conditions must be met:
+ *
+ *   - stack_pointer must point to an address aligned to
+ *     OS_TASK_STACK_ALIGNMENT.
+ *   - stack_size must be an integral multiple of OS_TASK_STACK_ALIGNMENT.
+ *   - stack_size must be the desired stack size plus OS_MAX_TLS_SIZE
+ *     (maybe plus CONTEXT_FP_SIZE).
+ *   - CONTEXT_FP_SIZE needs to be added if a floating point context is
+ *     needed for the task.  This is the case if OS_FP_ENABLED is contained
+ *     in the argument flags or in OS_ADD_TASK_FLAGS.
+ *
  * @param[out]  task_id will be set to the non-zero ID of the newly-created resource @nonnull
  * @param[in]   task_name the name of the new resource to create @nonnull
  * @param[in]   function_pointer the entry point of the new task @nonnull
