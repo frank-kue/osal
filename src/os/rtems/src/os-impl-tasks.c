@@ -122,17 +122,14 @@ int32 OS_TaskCreate_Impl(const OS_object_token_t *token, uint32 flags)
 
     if (r_stack_pointer != NULL)
     {
-        rtems_task_config task_config =
-        {
-            .name = r_name,
-            .initial_priority = task->priority,
-            .storage_area = r_stack_pointer,
-            .storage_size = task->stack_size,
-            .maximum_thread_local_storage_size = OS_MAX_TLS_SIZE,
-            .storage_free = NULL,
-            .initial_modes = r_mode,
-            .attributes = r_attributes
-        };
+        rtems_task_config task_config = {.name                              = r_name,
+                                         .initial_priority                  = task->priority,
+                                         .storage_area                      = r_stack_pointer,
+                                         .storage_size                      = task->stack_size,
+                                         .maximum_thread_local_storage_size = OS_MAX_TLS_SIZE,
+                                         .storage_free                      = NULL,
+                                         .initial_modes                     = r_mode,
+                                         .attributes                        = r_attributes};
 
         status = rtems_task_construct(&task_config, &impl->id);
     }
