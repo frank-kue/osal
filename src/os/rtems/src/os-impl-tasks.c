@@ -122,7 +122,8 @@ int32 OS_TaskCreate_Impl(const OS_object_token_t *token, uint32 flags)
 
     if (r_stack_pointer != NULL)
     {
-        rtems_task_config task_config = {
+        rtems_task_config task_config =
+        {
             .name = r_name,
             .initial_priority = task->priority,
             .storage_area = r_stack_pointer,
