@@ -134,7 +134,7 @@ int32 OS_TaskCreate_Impl(const OS_object_token_t *token, uint32 flags)
     {
         status = rtems_task_create(r_name, task->priority, task->stack_size, r_mode, r_attributes, &impl->id);
     }
-#else /* __RTEMS_MAJOR__ < 6 */
+#else  /* __RTEMS_MAJOR__ < 6 */
     status = rtems_task_create(r_name, task->priority, task->stack_size, r_mode, r_attributes, &impl->id);
 #endif /* __RTEMS_MAJOR__ */
 
